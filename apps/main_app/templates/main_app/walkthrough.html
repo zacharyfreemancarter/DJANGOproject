@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" integrity="sha256-a2tobsqlbgLsWs7ZVUGgP5IvWZsx8bTNQpzsqCSm5mk=" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Raleway';
+            font-weight: bold;
+        }
+        html,body{
+            height:100vh;
+            overflow: hidden;
+        }
+        .container-fluid{
+            height:100%;
+            width:100%;
+        }
+        #logo{
+            top: -600px;
+            position:absolute;
+            left: 50%;
+            margin-left:-300px;
+        }
+        #twoways{
+            position: relative;
+            opacity:0;
+            top: 100px;
+        }
+        #first{
+            position: relative;
+            top: 150px;
+            opacity:0;
+        }
+        #second{
+            position: relative;
+            top:-600px;
+        }
+        #or{
+            font-size: 30em;
+            position: absolute;
+            top: 100px;
+            right:-200%;
+        }
+        #last{
+            position: absolute;
+            top:-70px;
+            opacity: 0;
+            
+        }
+        #newlogo{
+            margin:0 0 -50 0;
+            padding:0;
+            opacity:0;
+        }
+        #btn{
+            margin-top:40px;
+            opacity:0;
+        }
+        #lastcontent{
+            position:relative;
+            top: -400px;
+        }
+    </style>
+</head>
+<body class="bg-warning">
+        {% load static %}
+        <div class="container">
+            <svg id=logo width="600" height="600"><image width="600" height="600" xlink:href={% static 'logo.svg' %}/></svg>
+        </div>
+        <div class="text-center content container-fluid justify-content-center">
+            <h1 id="twoways" text-dark>Two Ways to Play:</h1>
+            <div id=first class="container-fluid">
+                <h1>Test Your Skill to Simulate a Real Sports Betting Experience</h3>
+                    <h2>Pick Upcoming Games</h2>
+                    <h2>Earn Coins and Climb Leaderboards</h2>
+            </div>
+            <h1 id="or">OR</h1>
+        </div>
+        <div id="last" class="container-fluid text-center">
+            <svg id=newlogo width="300" height="300"><image width="300" height="300" xlink:href={% static 'logo.svg' %}/></svg>
+            <div id="lastcontent container text-center">
+            <h2>Be the Last Bet Standing</h2>
+            <h2>Try to Hit a Perfect NFL Weekend</h2>
+            <h2>Pick All Games Correctly to Win Your Share of Progressive Jackpot!</h2>
+            <h3>Entry is Completely Free and Progressive Jackpot Increases with Each Entry</h3>
+            <h1 class=text-success>$<span class=text-success id=money></span></h1>
+            <button class="btn btn-secondary" id="btn">Pick Your Parlay</button>
+        </div>
+        </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.js"></script>
+</body>
+<script>
+    var tl= anime.timeline({
+    })
+    tl.add({
+        targets: '#logo',
+        translateY: '600px',
+        duration: 2500
+    });
+    tl.add({
+        targets:'#logo',
+        width: '0px',
+        delay: 500,
+        duration: 3000,
+    });
+    tl.add({
+        targets:'#twoways',
+        opacity: .9,
+        duration:10000,
+    },3000)
+    tl.add({
+        targets:'#first',
+        opacity:.9,
+        duration:5000,
+    },4000) 
+    tl.add({
+        targets:[
+            '#twoways',
+            '#first',
+            '#second',
+        ],
+        translateX: '-100%',
+        opacity: 0,
+        duration: 4000,
+    },7000)
+    tl.add({
+        targets:'#or',
+        opacity: 1,
+        right: '150%',
+        duration: 7000,
+    },7500)
+    tl.add({
+        targets: '#last',
+        duration: 20000,
+        opacity: 1
+    },9000)
+    tl.add({
+        targets: ['#newlogo','#btn'],
+        duration: 20000,
+        opacity: 1,
+    },14000)
+    anime({
+    targets: ['#money'],
+    innerHTML: [0, 10000000.00],
+    round:1,
+    duration:400000,
+    easing: 'easeInOutExpo'
+    });
+    $('#btn').click(function(e){
+        anime({
+            targets:'#last',
+            opacity: 0,
+            duration: 2000
+        },1000)
+        window.location.href = '/parlay';
+    })
+</script>
+</html>

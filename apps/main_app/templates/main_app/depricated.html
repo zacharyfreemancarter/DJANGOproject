@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Numans');
+        {% load static %}
+        body{
+        background-image: url("{% static 'nfl.jpg' %}" );
+        height: 500px;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        }
+        .container{
+            opacity: .90;
+            height: 100%;
+        }
+        nav{
+            opacity:.9;
+        }
+    </style>
+</head>
+<body>
+        {% load static %}
+    <nav class="navbar navbar-light bg-warning fixed-top">
+        <span class="navbar-brand mb-0 h1">pickem.io</span>
+        <h6 class="text-success p-2 bg-dark border border-dark rounded">$100.00</h6>
+    </nav>
+    <div class="container">
+        <div class="mt-row">
+        </div>
+        <div class="row pt-5">
+        {% load timestamp_to_time %}
+        {% for game in games %}
+        {% if game.sites %}
+        <div class="col-12 pt-1 bg-light">
+            <div class="m-3 row border rounded rounded-big">
+                <div class="p-4 col-5 bg-dark text-white">
+                    {% if game.teams.0 == game.home_team %}
+                    <h2 class="row pr-3">{{ game.teams.1 }} @ {{ game.teams.0 }}</h2>
+                    {% endif %}
+                    {% if game.teams.1 == game.home_team %}
+                    <h2 class="row pr-3">{{ game.teams.0 }} @ {{ game.teams.1 }}</h2>
+                    {% endif %}
+                    <h5 class="text-left">{{ game.commence_time |timestamp_to_time }}</h5>
+                </div>
+                <div class="col-7 row bg-light justify-content-between">
+                    <h4 class="text-dark col-12 mt-1 mb-1 text-center">Points Spread</h4>
+                    {% if game.sites.0.odds.spreads.points.0.0 != '-' %}
+                    {% if game.sites.0.odds.spreads.points.0.0|add:"0" != 0 %}
+                    <div class="row col-12 justify-content-between">
+                        <h6 class="text-success ml-3 col-4 text-center"> testing {{ game.teams.1 }}  {{ game.sites.0.odds.spreads.points.1 }}</h6>
+                        <h6 class="text-danger col-4 text-center">{{ game.teams.0 }} + {{ game.sites.0.odds.spreads.points.0 }}</h6>
+                    </div>
+                    <div class="col-5 pb-3 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name=site value={{game.sites.0.site_key}}>
+                            <input type="hidden" name=commence_time value={{game.commence_time}}>
+                            <input type="hidden" name=team0 value="{{game.teams.0}}">
+                            <input type="hidden" name=team1 value="{{game.teams.1}}">
+                            <input type="hidden" name=winningteam value="{{game.teams.1}}">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    <div class="col-5 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            <input type="hidden" name=teams value="{{game.teams}}">
+                            <input type="hidden" name=winningteam value="{{game.teams.0}}">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    {% endif %}
+                        {% endif %}
+                    {% if game.sites.0.odds.spreads.points.1.0 != '-' %}
+                    {% if game.sites.0.odds.spreads.points.1.0|add:"0" != 0 %}
+                    <div class="row col-12 justify-content-between">
+                        <h6 class="text-success ml-3 col-4 text-center">{{ game.teams.0 }}  {{ game.sites.0.odds.spreads.points.0 }}</h6>
+                        <h6 class="text-danger col-4 text-center">{{ game.teams.1 }} + {{ game.sites.0.odds.spreads.points.1 }}</h6>
+                    </div>
+                    <div class="col-5 pb-3 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    <div class="col-5 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if game.sites.0.odds.spreads.points.1.0|add:"0" == 0 %}
+                    <div class="row col-12 justify-content-between">
+                        <h6 class="text-dark ml-3 col-4 text-center">{{ game.teams.0 }} EVEN</h6>
+                        <h6 class="text-dark col-4 text-center">{{ game.teams.1 }} EVEN</h6>
+                    </div>
+                    <div class="col-5 pb-3 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    <div class="col-5 text-center justify-content-center">
+                        <form action="pick" method="POST">
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control"></input>
+                            </div>
+                            <input type="submit" class="btn btn-secondary align-bottom" value="pickem">
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" integrity="sha256-a2tobsqlbgLsWs7ZVUGgP5IvWZsx8bTNQpzsqCSm5mk=" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <style>
+        .card{
+            display:none;
+            right:-100%;
+        }
+        .border-3{
+            border-radius: 10px;
+        }
+        .vertical-center {
+        min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+        min-height: 100vh; /* These two lines are counted as one :-)       */
+        display: flex;
+        align-items: center;
+        }
+</style>
+</head>
+<body class="bg-warning container-fluid vertical-center">
+    <div class="container text-center align-middle" id="entry">
+        <h1 class=align-middle>1 Entry Remaining</h1>
+    <h1 id=entrybutton>Use Your Entry</h1>
+    </div>
+    {% for line in current_lines %}
+    <div id="card{{forloop.counter}}" class="border border-dark border-3 text-center justify-content-between container card bg-warning">
+        <div id="cardhead{{forloop.counter}}" class="card-head container text-center">
+            <h1>{{line.away_team}} @ {{line.home_team}}</h1>
+        </div>
+        <div id="cardbody{{forloop.counter}}" class="card-body row">
+            <div class="col-6 awaygroup" data-value="{{line.away_team}} @ {{line.home_team}} - {{line.away_team}} {{line.away_points}}" id=awaygroup{{forloop.counter}}>
+                <div data-lineid={{line.id}} data-awayteam="{{line.away_team}}" id="awaypick{{forloop.counter}}"><h1>{{line.away_team}} {{line.away_points}}</h1></div>
+            </div>
+            <div class="col-6 homegroup" data-value="{{line.away_team}} @ {{line.home_team}} - {{line.home_team}} {{line.home_points}}" id=homegroup{{forloop.counter}}>
+                <div  data-lineid={{line.id}} data-hometeam="{{line.home_team}}" id="homepick{{forloop.counter}}"><h1>{{line.home_team}} {{line.home_points}}</h1></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% csrf_token %}
+    <div id="card{{counter}}" class="border border-dark border-3 text-center justify-content-between container card bg-warning">
+        <div class="card-head"><h1>Your Picks</h1></div>
+        <div class="card-body">
+            <ul id="list{{counter}}"></ul>
+            <h1 id=submit>Submit</h1>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.js"></script>
+</body>
+<script>
+    picks_json={}
+    var counter=1
+    $('#entrybutton').click(function(e){
+        document.getElementById('entry').style.cssText ='display:none';
+        anime({
+            targets: '#entrybutton',
+            translateX: '-150%',
+            duration: 1500
+        })
+        setTimeout(function()
+        {        
+            document.getElementById('entrybutton').style.cssText ='display:none';
+            document.getElementById('card'+counter).style.cssText ='display:block';
+            anime({
+            targets: '#card'+counter,
+            right: '0%',
+            duration: 500
+        })
+        }, 50);
+    })
+    $('.awaygroup').click(function(e){
+        lineid = $('#awaypick'+counter).data('lineid')
+        pick = $('#awaypick'+counter).data('awayteam')
+        picks_json[lineid]=[pick,'unfinished']
+        line = $(this).data('value');
+        $('#list'+{{counter}}).append("<li>"+line+"</li>")
+        $(this).effect('highlight', {'color':'yellow'})
+        anime({
+            targets: '#card'+counter,
+            translateX: '-200%',
+            duration: 600
+        })
+        setTimeout(function()
+        {        
+            document.getElementById('card'+counter).style.cssText ='display:none';
+            counter++
+            document.getElementById('card'+counter).style.cssText ='display:block';
+            anime({
+            targets: '#card'+counter,
+            right: '0%',
+            duration: 600
+        })
+        }, 200);
+    })
+    $('.homegroup').click(function(e){
+        lineid = $('#homepick'+counter).data('lineid')
+        pick = $('#homepick'+counter).data('hometeam')
+        picks_json[lineid]=[pick,'unfinished']
+        line = $(this).data('value');
+        $('#list'+{{counter}}).append("<li>"+line+"</li>")
+        $(this).effect('highlight', {'color':'yellow'})
+        anime({
+            targets: '#card'+counter,
+            translateX: '-200%',
+            duration: 600
+        })
+        setTimeout(function()
+        {        
+            document.getElementById('card'+counter).style.cssText ='display:none';
+            counter++
+            document.getElementById('card'+counter).style.cssText ='display:block';
+            anime({
+            targets: '#card'+counter,
+            right: '0%',
+            duration: 600
+        })
+        }, 200);
+    })
+    $('#submit').click(function(e){
+        $.ajax({
+            type:'POST',
+            url:'/processparlay',
+            data:{
+                json: JSON.stringify(picks_json),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(e){
+                alert('submitted')
+                if(e=='failure'){
+                    alert('Timeout issue, refresh and try again.')
+                }
+                if(e=='success'){
+                    alert('Picks submitted')
+                }
+            },
+            error:function(e){
+                alert('Server Errors, refresh and try again.')
+            }
+        });
+    });
+</script>
+</html>

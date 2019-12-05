@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Numans');
+        {% load static %}
+        body{
+        background-image: url("{% static 'login.jpg' %}" );
+        height: 500px;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        }
+        .container{
+            opacity: .90;
+        }
+        nav{
+            opacity:.9;
+        }
+    </style>
+</head>
+<body>
+        {% load static %}
+        <nav class="navbar navbar-light bg-warning fixed-top">
+                <span class="navbar-brand mb-0 h1"><a class=text-dark href="/index">pickem.io</a></span>
+                <div class="dropdown">
+                <button class="text-success p-2 bg-dark border border-dark rounded btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-coins"></i> {{user.points}}</button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/user/{{user.id}}">{{user.name}}'s Profile</a>
+                    <a class="dropdown-item" href="/scores">NFL Scores</a>
+                    <a class="dropdown-item" href="/leaderboard">Leaderboard</a>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    <div class="container">
+        <div class="row pt-5 justify-content-center">
+            {% for game in games %}
+            <div class="card col-12 m-3">
+                <div class="card-header">
+                    <h6>{{game.date}}</h6>
+                    <h2>{{game.away_team}} @ {{ game.home_team }}</h2>
+                </div>
+                <div class="card-body">
+                    <div class=text-center>
+                        <h4>{{game.current_quarter}}</h4>
+                    </div>
+                    <table class="table border border-secondary rounded">
+                        <thead>
+                            <tr class="border border-secondary rounded">
+                                <th scope="col" class="border border-secondary rounded"></th>
+                                <th scope="col" class="border border-secondary rounded">Q1</th>
+                                <th scope="col" class="border border-secondary rounded">Q2</th>
+                                <th scope="col" class="border border-secondary rounded">Q3</th>
+                                <th scope="col" class="border border-secondary rounded">Q4</th>
+                                <th scope="col" class="border border-secondary rounded">OT</th>
+                                <th scope="col" class="border border-secondary rounded">F</th>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="border border-secondary rounded">{{game.away_team_abbr}}</th>
+                                <td class="border border-secondary rounded">{{game.away_score_Q1}}</td>
+                                <td class="border border-secondary rounded">{{game.away_score_Q2}}</td>
+                                <td class="border border-secondary rounded">{{game.away_score_Q3}}</td>
+                                <td class="border border-secondary rounded">{{game.away_score_Q4}}</td>
+                                <td class="border border-secondary rounded">{{game.away_score_Q5}}</td>
+                                <td class="border border-secondary rounded">{{game.final_away_score}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="border border-secondary rounded">{{game.home_team_abbr}}</th>
+                                <td class="border border-secondary rounded">{{game.home_score_Q1}}</td>
+                                <td class="border border-secondary rounded">{{game.home_score_Q2}}</td>
+                                <td class="border border-secondary rounded">{{game.home_score_Q3}}</td>
+                                <td class="border border-secondary rounded">{{game.home_score_Q4}}</td>
+                                <td class="border border-secondary rounded">{{game.home_score_Q5}}</td>
+                                <td class="border border-secondary rounded">{{game.final_home_score}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="card col-12 row">
+                <div class="card-body row">
+                    <div class="col-6 text-center">
+                        <h5>{{game.home_team}} Stat Leaders:</h5>
+                            {% if hpl %}
+                        <h6>Passing: {{hpl.name}} {{hpl.cmp}}/{{hpl.att}} {{hpl.yds}} Yards {{hpl.tds}} TDs {{hpl.ints}} INTs</h6>
+                        {% endif %}
+                        {% if hrushl %}
+                        <h6>Rushing: {{hrushl.name}} {{hrushl.att}} Carries {{hrushl.yds}} Yards {{hrushl.tds}} TDs</h6>
+                        {% endif %}
+                        {% if hrecl %}
+                        <h6>Recieving: {{hrecl.name}} {{hrecl.rec}} Catches {{hrecl.yds}} Yards {{hrecl.tds}} TDs</h6>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center">
+                        <h5>{{game.away_team}} Stat Leaders:</h5>
+                            {% if apl %}
+                        <h6>Passing: {{apl.name}} {{apl.cmp}}/{{apl.att}} {{apl.yds}} Yards {{apl.tds}} TDs {{apl.ints}} INTs</h6>
+                        {% endif %}
+                        {% if arushl %}
+                        <h6>Rushing: {{arushl.name}} {{arushl.att}} Carries {{arushl.yds}} Yards {{arushl.tds}} TDs</h6>
+                        {% endif %}
+                        {% if arecl %}
+                        <h6>Recieving: {{arecl.name}} {{arecl.rec}} Catches {{arecl.yds}} Yards {{arecl.tds}} TDs</h6>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
